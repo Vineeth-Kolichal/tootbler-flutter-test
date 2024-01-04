@@ -18,13 +18,15 @@ class EmployeeScreenBloc
   List<EmployeeEntity> empListData = [];
   EmployeeScreenBloc(this.usecase) : super(EmployeeScreenState.initial()) {
     on<GetEmployeeList>((event, emit) async {
-      emit(state.copyWith(isLoading: true, err: null));
+      emit(state.copyWith(isLoading: true, err: null, cityIndex: 0));
       final data = await usecase(NoParams());
       final newState = data.fold((fail) {
-        return state.copyWith(isLoading: false, empList: [], err: fail.error);
+        return state.copyWith(
+            isLoading: false, empList: [], err: fail.error, cityIndex: 0);
       }, (data) {
         empListData = data;
-        return state.copyWith(isLoading: false, empList: data, err: null);
+        return state.copyWith(
+            isLoading: false, empList: data, err: null, cityIndex: 0);
       });
 
       emit(newState);

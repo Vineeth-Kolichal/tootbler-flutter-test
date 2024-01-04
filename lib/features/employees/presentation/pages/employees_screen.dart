@@ -32,7 +32,7 @@ class EmployeesScreen extends StatelessWidget {
             return _buildErrorOrEmptyMsg("${state.err}");
           }
           //after successfull fetch, showing data in UI
-          return _buildDataList(state);
+          return _buildDataList(state, context);
         },
       ),
     );
@@ -44,47 +44,52 @@ class EmployeesScreen extends StatelessWidget {
     );
   }
 
-  CustomScrollView _buildDataList(EmployeeScreenState state) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar(
-          expandedHeight: 250.0,
-          pinned: true,
-          floating: true,
-          flexibleSpace: FlexibleSpaceBar(
-            //Image
-            background: Image.asset(
-              "assets/images/employees.jpg",
-              fit: BoxFit.cover,
+  Widget _buildDataList(EmployeeScreenState state, BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<EmployeeScreenBloc>().add(const GetEmployeeList());
+      },
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 250.0,
+            pinned: true,
+            floating: true,
+            flexibleSpace: FlexibleSpaceBar(
+              //Image
+              background: Image.asset(
+                "assets/images/employees.jpg",
+                fit: BoxFit.cover,
+              ),
+            ),
+            // filter button row
+            bottom: PreferredSize(
+                preferredSize: const Size.fromHeight(70),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  height: 70,
+                  color: Colors.white,
+                  child: Row(
+                    children: List.generate(
+                        3,
+                        (index) => FilterButton(
+                            index: index, selectedIndex: state.cityIndex)),
+                  ),
+                )),
+          ),
+          //Employee list
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (_, int index) {
+                return EmpoyeeListTile(
+                  entity: state.empList[index],
+                );
+              },
+              childCount: state.empList.length,
             ),
           ),
-          // filter button row
-          bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(70),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: 70,
-                color: Colors.white,
-                child: Row(
-                  children: List.generate(
-                      3,
-                      (index) => FilterButton(
-                          index: index, selectedIndex: state.cityIndex)),
-                ),
-              )),
-        ),
-        //Employee list
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (_, int index) {
-              return EmpoyeeListTile(
-                entity: state.empList[index],
-              );
-            },
-            childCount: state.empList.length,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
