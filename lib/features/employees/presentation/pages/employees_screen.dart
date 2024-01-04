@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toobler_flutter_test/common/widgets/space.dart';
+import 'package:toobler_flutter_test/features/employees/domain/entities/employee_entity.dart';
 import 'package:toobler_flutter_test/features/employees/presentation/bloc/employee_screen_bloc.dart';
 
 class EmployeesScreen extends StatelessWidget {
@@ -8,7 +9,10 @@ class EmployeesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> city = ["All", "Antonette", "Gwenborough"];
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<EmployeeScreenBloc>().add(const GetEmployeeList());
+    });
+
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -22,6 +26,13 @@ class EmployeesScreen extends StatelessWidget {
       ),
       body: BlocBuilder<EmployeeScreenBloc, EmployeeScreenState>(
         builder: (context, state) {
+          if (state.isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+              ),
+            );
+          }
           return CustomScrollView(
             slivers: <Widget>[
               //2
@@ -46,9 +57,9 @@ class EmployeesScreen extends StatelessWidget {
                             3,
                             (index) => GestureDetector(
                                   onTap: () {
-                                    // context
-                                    //     .read<EmployeeScreenBloc>()
-                                    //     .add(GetEmployeeList(cityIndex: index));
+                                    context
+                                        .read<EmployeeScreenBloc>()
+                                        .add(Filter(cityIndex: index));
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -70,7 +81,9 @@ class EmployeesScreen extends StatelessWidget {
                                           const BoxConstraints(minWidth: 80),
                                       child: Center(
                                           child: Text(
-                                        city[index],
+                                        context
+                                            .read<EmployeeScreenBloc>()
+                                            .city[index],
                                         style: theme.textTheme.labelLarge!
                                             .copyWith(
                                                 color: state.cityIndex != index
@@ -88,9 +101,11 @@ class EmployeesScreen extends StatelessWidget {
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (_, int index) {
-                    return EmpoyeeListTile();
+                    return EmpoyeeListTile(
+                      entity: state.empList[index],
+                    );
                   },
-                  childCount: 20,
+                  childCount: state.empList.length,
                 ),
               ),
             ],
@@ -104,7 +119,9 @@ class EmployeesScreen extends StatelessWidget {
 class EmpoyeeListTile extends StatelessWidget {
   const EmpoyeeListTile({
     super.key,
+    required this.entity,
   });
+  final EmployeeEntity entity;
 
   @override
   Widget build(BuildContext context) {
@@ -122,24 +139,24 @@ class EmpoyeeListTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Name",
+                    "${entity.name}",
                     style: theme.textTheme.titleMedium!
                         .copyWith(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   Text(
                     "Designation",
-                    style: theme.textTheme.bodyMedium!
-                        .copyWith(color: Color.fromARGB(255, 141, 140, 140)),
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                        color: const Color.fromARGB(255, 141, 140, 140)),
                   )
                 ],
               ),
               Space.y(5),
               Text(
-                "Address1",
+                "${entity.address?.street}",
                 style: theme.textTheme.bodyLarge,
               ),
               Text(
-                "Address2",
+                "${entity.address?.city}",
                 style: theme.textTheme.bodyLarge,
               )
             ],
