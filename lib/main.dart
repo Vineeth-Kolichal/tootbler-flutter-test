@@ -14,9 +14,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Toobler machine test',
       theme: ThemeData(
+        cardTheme: CardTheme(color: Colors.white),
         textTheme:
             TextTheme(labelLarge: TextStyle(fontSize: 16, color: Colors.white)),
-        primaryColor: Colors.blue,
+        primaryColor: Color(0xFF1e4aa7),
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
