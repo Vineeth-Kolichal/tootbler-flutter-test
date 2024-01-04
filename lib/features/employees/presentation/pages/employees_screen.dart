@@ -46,9 +46,9 @@ class EmployeesScreen extends StatelessWidget {
                             3,
                             (index) => GestureDetector(
                                   onTap: () {
-                                    context
-                                        .read<EmployeeScreenBloc>()
-                                        .add(GetEmployeeList(cityIndex: index));
+                                    // context
+                                    //     .read<EmployeeScreenBloc>()
+                                    //     .add(GetEmployeeList(cityIndex: index));
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
