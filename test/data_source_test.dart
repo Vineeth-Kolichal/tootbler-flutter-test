@@ -3,10 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'package:toobler_flutter_test/core/api_endpoints/api_endpoints.dart';
-import 'package:toobler_flutter_test/core/network/custom_exception.dart';
-import 'package:toobler_flutter_test/core/network/network_client.dart';
+import 'package:toobler_flutter_test/core/network_exceptions/custom_exception.dart';
 import 'package:toobler_flutter_test/features/employees/data/datasources/employee_data_source.dart';
-import 'package:toobler_flutter_test/features/employees/data/models/employee_model.dart';
 
 class MockDio extends Mock implements Dio {}
 
@@ -56,8 +54,7 @@ void main() {
       try {
         await dataSource.getEmployeesData();
         fail('Should have thrown a CustomException');
-      } on CustomException catch (_) {
-      }
+      } on CustomException catch (_) {}
     });
   });
 }

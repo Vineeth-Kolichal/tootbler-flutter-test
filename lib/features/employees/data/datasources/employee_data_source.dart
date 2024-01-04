@@ -3,7 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:toobler_flutter_test/core/api_endpoints/api_endpoints.dart';
 import 'package:toobler_flutter_test/features/employees/data/models/employee_model.dart';
 
-import '../../../../core/network/custom_exception.dart';
+import '../../../../core/network_exceptions/custom_exception.dart';
 
 abstract class EmployeeDataSource {
   Future<List<EmployeeModel>> getEmployeesData();
