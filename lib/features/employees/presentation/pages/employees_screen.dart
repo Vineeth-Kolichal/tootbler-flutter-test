@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toobler_flutter_test/common/widgets/space.dart';
+import 'package:toobler_flutter_test/features/employees/presentation/bloc/employee_screen_bloc.dart';
 
 class EmployeesScreen extends StatelessWidget {
   const EmployeesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    List<String> city = ["All", "Antonette", "Gwenborough"];
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -17,61 +20,82 @@ class EmployeesScreen extends StatelessWidget {
               .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
-      body: CustomScrollView(
-        slivers: <Widget>[
-          //2
-          SliverAppBar(
-            expandedHeight: 250.0,
-            pinned: true,
-            floating: true,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Image.asset(
-                "assets/images/employees.jpg",
-                fit: BoxFit.cover,
-              ),
-            ),
-            bottom: PreferredSize(
-                preferredSize: Size.fromHeight(70),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  height: 70,
-                  color: Colors.white,
-                  child: Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 7),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          height: 35,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: theme.primaryColor.withOpacity(0.5),
-                                  width: 2),
-                              borderRadius: BorderRadius.circular(7),
-                              color: const Color(0xFF8897F3)),
-                          constraints: BoxConstraints(minWidth: 80),
-                          child: Center(
-                              child: Text(
-                            "All",
-                            style: theme.textTheme.labelLarge,
-                          )),
-                        ),
-                      )
-                    ],
+      body: BlocBuilder<EmployeeScreenBloc, EmployeeScreenState>(
+        builder: (context, state) {
+          return CustomScrollView(
+            slivers: <Widget>[
+              //2
+              SliverAppBar(
+                expandedHeight: 250.0,
+                pinned: true,
+                floating: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Image.asset(
+                    "assets/images/employees.jpg",
+                    fit: BoxFit.cover,
                   ),
-                )),
-          ),
+                ),
+                bottom: PreferredSize(
+                    preferredSize: const Size.fromHeight(70),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      height: 70,
+                      color: Colors.white,
+                      child: Row(
+                        children: List.generate(
+                            3,
+                            (index) => GestureDetector(
+                                  onTap: () {
+                                    context
+                                        .read<EmployeeScreenBloc>()
+                                        .add(GetEmployeeList(cityIndex: index));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
+                                      height: 35,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: const Color(0xFF556bdb),
+                                              width: 1),
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          color: state.cityIndex == index
+                                              ? const Color(0xFF8897F3)
+                                              : Colors.white),
+                                      constraints:
+                                          const BoxConstraints(minWidth: 80),
+                                      child: Center(
+                                          child: Text(
+                                        city[index],
+                                        style: theme.textTheme.labelLarge!
+                                            .copyWith(
+                                                color: state.cityIndex != index
+                                                    ? Colors.black
+                                                    : null),
+                                      )),
+                                    ),
+                                  ),
+                                )),
+                      ),
+                    )),
+              ),
 
-          //3
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (_, int index) {
-                return EmpoyeeListTile();
-              },
-              childCount: 20,
-            ),
-          ),
-        ],
+              //3
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (_, int index) {
+                    return EmpoyeeListTile();
+                  },
+                  childCount: 20,
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
