@@ -14,15 +14,11 @@ class EmployeesScreen extends StatelessWidget {
       context.read<EmployeeScreenBloc>().add(const GetEmployeeList());
     });
 
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: theme.primaryColor,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           "Employees",
-          style: theme.textTheme.titleLarge!
-              .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: BlocBuilder<EmployeeScreenBloc, EmployeeScreenState>(
@@ -33,7 +29,7 @@ class EmployeesScreen extends StatelessWidget {
           }
           //Show error message in UI
           if (state.err != null) {
-            return _buildError(state);
+            return _buildErrorOrEmptyMsg("${state.err}");
           }
           //after successfull fetch, showing data in UI
           return _buildDataList(state);
@@ -42,26 +38,27 @@ class EmployeesScreen extends StatelessWidget {
     );
   }
 
-  Center _buildError(EmployeeScreenState state) {
+  Center _buildErrorOrEmptyMsg(String msg) {
     return Center(
-      child: Text("${state.err}"),
+      child: Text(msg),
     );
   }
 
   CustomScrollView _buildDataList(EmployeeScreenState state) {
     return CustomScrollView(
       slivers: <Widget>[
-        //2
         SliverAppBar(
           expandedHeight: 250.0,
           pinned: true,
           floating: true,
           flexibleSpace: FlexibleSpaceBar(
+            //Image
             background: Image.asset(
               "assets/images/employees.jpg",
               fit: BoxFit.cover,
             ),
           ),
+          // filter button row
           bottom: PreferredSize(
               preferredSize: const Size.fromHeight(70),
               child: Container(
@@ -76,8 +73,7 @@ class EmployeesScreen extends StatelessWidget {
                 ),
               )),
         ),
-
-        //3
+        //Employee list
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (_, int index) {
