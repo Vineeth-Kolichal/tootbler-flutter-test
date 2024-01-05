@@ -1,16 +1,23 @@
 # toobler_flutter_test
 
-A new Flutter project.
+A Machine test for the flutter developer position at Toobler
 
-## Getting Started
+## Tools and Technologies used
+- Flutter
+- Bloc for state management
+- Clean architecture
+- VS code IDE
 
-This project is a starting point for a Flutter application.
+## ScreenShots
 
-A few resources to get you started if this is your first Flutter project:
+1. Initial Screen
+![Initial](assets/screenshots/1.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+2. Scrolling
+![Scrolling](assets/screenshots/2.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. Filter
+![Filter](assets/screenshots/3.png)
+
+4. View details Screen
+![View details](assets/screenshots/4.png)
