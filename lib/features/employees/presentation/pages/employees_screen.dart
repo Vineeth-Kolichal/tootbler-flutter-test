@@ -45,6 +45,7 @@ class EmployeesScreen extends StatelessWidget {
   }
 
   Widget _buildDataList(EmployeeScreenState state, BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return RefreshIndicator(
       onRefresh: () async {
         context.read<EmployeeScreenBloc>().add(const GetEmployeeList());
@@ -77,17 +78,28 @@ class EmployeesScreen extends StatelessWidget {
                   ),
                 )),
           ),
-          //Employee list
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (_, int index) {
-                return EmpoyeeListTile(
-                  entity: state.empList[index],
-                );
-              },
-              childCount: state.empList.length,
+          //If employee lis is empty show message
+          if (state.empList.isEmpty)
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: size.width,
+                width: size.width,
+                child: _buildErrorOrEmptyMsg('No employees found'),
+              ),
             ),
-          ),
+
+          //Employee list
+          if (state.empList.isNotEmpty)
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (_, int index) {
+                  return EmpoyeeListTile(
+                    entity: state.empList[index],
+                  );
+                },
+                childCount: state.empList.length,
+              ),
+            ),
         ],
       ),
     );
